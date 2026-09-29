@@ -2,7 +2,7 @@
 clear
 
 # === ARCHIVO DE LOG ===
-LOG="$HOME/ZenNet/log_zennet.txt"
+LOG="$HOME/ZenNet/scan.log"
 if [ ! -f "$LOG" ]; then
 	touch "$LOG"
 fi
@@ -49,17 +49,6 @@ echo "================== $(date) ==================" | tee -a "$LOG"
 		# === LECTURA DE TIME TO LIFE ===
 			TTL=$(echo "$PING" | grep -i "ttl=" | awk -F'ttl=' '{print $2}' | awk '{print $1}')
 
-            	# === ESTIMACIÓN DE SISTEMA OPERATIVO SEGÚN TTL ===
-			# "-gt" mayor que ...
-			# "-le" menor o igual que ... 
-            		if [ "$TTL" -gt 100 ] && [ "$TTL" -le 128 ]; then
-                		SO_ESTIMADO="WINDOWS"
-            		elif [ "$TTL" -le 64 ]; then
-                		SO_ESTIMADO="LINUX/APPLE"
-            		else
-                		SO_ESTIMADO="ROUTER/NET_DEVICE"
-            		fi
-
 		# === LECTURA DE DIRECCION MAC ===
 			# "awk -v ip="${SUBRED}.${i}"" filtra las IP como una variable interna en awk.
 			# "'$1 == ip'" flag de awk que busca la primera fila de /proc/net/arp.
@@ -72,7 +61,7 @@ echo "================== $(date) ==================" | tee -a "$LOG"
 				MAC="MAC NOT DETECTED"
 			fi
 		
-		RESULTADO="- ${SUBRED}.${i} - ${MAC} - ttl=${TTL} - ${SO_ESTIMADO}" 
+		RESULTADO="- ${SUBRED}.${i} - ${MAC} - ttl=${TTL}" 
 		
 		# === ENVIAR SALIDA AL LOG ===
 			# "tee -a" envia la salida para que se acumule al final de $LOG 
