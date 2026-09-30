@@ -7,6 +7,8 @@ if [ ! -f "$LOG" ]; then
 	touch "$LOG"
 fi
 
+puertos_gen=( 21 22 23 25 53 80 443 3306 8080 )
+
 cat << "EOF"
 
  ███████████                     ██████   █████           █████   
@@ -43,9 +45,19 @@ echo "================== $(date) ==================" | tee -a "$LOG"
 	# "2> /dev/null" envia la salida a la nada para no llenar la terminal de texto.
 	for i in {1..254}; do
 		PING=$(ping -c 1 -W 1 "${SUBRED}.${i}" 2> /dev/null)
-	
 		if echo "$PING" | grep -iq "ttl="; then
 
+		# === ESCANEO DE PORTS GENERICOS ===
+			# "timeout 1" detiene el comando despues de un segundo.
+			# "bash -c" Lanza un proceso hijo para ejecutar el contenido entre comillas.
+			# "echo >" escribe datos de salida.
+			# "/dev/tcp/IP/PORT" Caracteristica del sistema de archivos de Bash para sockets TCP  
+			PUERTOS="" 
+			for port in "${puertos_gen[@]}"; do
+				timeout 1 bash -c "echo > /dev/tcp/${SUBRED}.${i}/${port}" 2>/dev/null && PUERTOS="${PUERTOS} ${port}"
+			done
+			
+		
 		# === LECTURA DE TIME TO LIFE ===
 			TTL=$(echo "$PING" | grep -i "ttl=" | awk -F'ttl=' '{print $2}' | awk '{print $1}')
 
@@ -60,11 +72,12 @@ echo "================== $(date) ==================" | tee -a "$LOG"
 			if [ -z "$MAC" ]; then
 				MAC="MAC NOT DETECTED"
 			fi
-		
-		RESULTADO="- ${SUBRED}.${i} - ${MAC} - ttl=${TTL}" 
+
+		# "\n" ejecuta un salto de linea.
+		RESULTADO="\nIP: ${SUBRED}.${i} | MAC: ${MAC} | TTL: ${TTL} \nOPEN PORTS:${PUERTOS}"
 		
 		# === ENVIAR SALIDA AL LOG ===
 			# "tee -a" envia la salida para que se acumule al final de $LOG 
-		echo  "$RESULTADO"| tee -a "$LOG" 	
+		echo -e "$RESULTADO"| tee -a "$LOG" 	
 		fi
 	done
