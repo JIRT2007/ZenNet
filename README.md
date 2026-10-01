@@ -1,12 +1,13 @@
 # ZenNet
 
-**ZenNet** es una herramienta de terminal (TUI) ligera diseñada en Bash Script para ejecutar un sencillo escaneo de red y diagnostico en tiempo real.
+**ZenNet** es una herramienta de terminal (CLI) ligera diseñada en Bash Script para ejecutar un sencillo escaneo de red y diagnostico en tiempo real.
 
 ## Caracteristicas:
 - **Diseño:** La utilidad esta enteramente desarrollada en Bash Script.
 - **Arquitectura:** ZenNet esta programado bajo un paradigma imperativo y se desarrolla filosoficamente y tecnicamente con una estructura monolitica, un solo script que define toda la logica.
 - **Enfoque:** NO es una herramienta orientada al ejercer de la seguridad informatica, es una utilidad experimental, academica y planeada para laboratorios de maquinas virtuales o una red local.
 - **Registro centralizado:** Todos los escaneos ejecutados seran almacenados en un archivo llamado `scan.log`.
+- ZenNet no busca competir con herramientas maduras y profesionales como **NMAP**, se limita a ser un proyecto pequeño de caracter experimental.
 
 ## Requisitos:
 - Sistema operativo GNU/Linux o derivados de Unix.

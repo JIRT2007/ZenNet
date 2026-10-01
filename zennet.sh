@@ -7,7 +7,7 @@ if [ ! -f "$LOG" ]; then
 	touch "$LOG"
 fi
 
-puertos_gen=( 21 22 23 25 53 80 443 3306 8080 )
+puertos_gen=( 20 21 22 23 25 53 67 68 80 110 123 135 137 138 139 143 161 443 445 631 3306 3389 5353 8080 )
 
 cat << "EOF"
 
@@ -55,8 +55,7 @@ echo "================== $(date) ==================" | tee -a "$LOG"
 			PUERTOS="" 
 			for port in "${puertos_gen[@]}"; do
 				timeout 1 bash -c "echo > /dev/tcp/${SUBRED}.${i}/${port}" 2>/dev/null && \
-					SERVICIO=$(grep -w "${port}/tcp" /etc/services | awk '{print $1}' | head -n1) && \
-					PUERTOS="${PUERTOS} ${port} ${SERVICIO}\n"
+					PUERTOS="${PUERTOS} ${port}"
 			done
 			
 		
@@ -76,7 +75,7 @@ echo "================== $(date) ==================" | tee -a "$LOG"
 			fi
 
 		# "\n" ejecuta un salto de linea.
-		RESULTADO="\nIP LOCAL: ${SUBRED}.${i} | MAC: ${MAC} | TTL: ${TTL} \nOPEN PORTS:\n${PUERTOS}"
+		RESULTADO="\nIP LOCAL: ${SUBRED}.${i} | MAC: ${MAC} | TTL: ${TTL} \nOPEN PORTS:${PUERTOS}"
 		
 		# === ENVIAR SALIDA AL LOG ===
 			# "tee -a" envia la salida para que se acumule al final de $LOG 
