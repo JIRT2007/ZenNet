@@ -55,14 +55,8 @@ echo "================== $(date) ==================" | tee -a "$LOG"
 			PUERTOS="" 
 			for port in "${puertos_gen[@]}"; do
 				timeout 1 bash -c "echo > /dev/tcp/${SUBRED}.${i}/${port}" 2>/dev/null && \
-					
-				# === IDENTIFICAR SERVICIOS ===
-					# "grep -w" busqueda exacta del contenido entre comillas.
-					# "/etc/services" el archivo que contiene la tabla de nombres de servicio y sus números de puerto/protocolo.
-					# "head -n1" limita la salida a únicamente la primera línea. 
-					SERVICIO=$(grep -w "${port}/tcp" /etc/services | awk '{print $1}' | head -n1) && \ 
-					
-					PUERTOS="${PUERTOS} ${port} ${SERVICIO}"
+					SERVICIO=$(grep -w "${port}/tcp" /etc/services | awk '{print $1}' | head -n1) && \
+					PUERTOS="${PUERTOS} ${port} ${SERVICIO}\n"
 			done
 			
 		
@@ -82,7 +76,7 @@ echo "================== $(date) ==================" | tee -a "$LOG"
 			fi
 
 		# "\n" ejecuta un salto de linea.
-		RESULTADO="\nIP LOCAL: ${SUBRED}.${i} | MAC: ${MAC} | TTL: ${TTL} \nOPEN PORTS:${PUERTOS}"
+		RESULTADO="\nIP LOCAL: ${SUBRED}.${i} | MAC: ${MAC} | TTL: ${TTL} \nOPEN PORTS:\n${PUERTOS}"
 		
 		# === ENVIAR SALIDA AL LOG ===
 			# "tee -a" envia la salida para que se acumule al final de $LOG 
