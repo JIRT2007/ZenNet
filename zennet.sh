@@ -2,7 +2,7 @@
 clear
 
 # === ARCHIVO DE LOG ===
-LOG="$HOME/ZenNet/scan.log"
+LOG="$HOME/ZenNet/report.log"
 if [ ! -f "$LOG" ]; then
 	touch "$LOG"
 fi
@@ -20,7 +20,7 @@ cat << "EOF"
  ███████████▒▒██████  ████ █████ █████  ▒▒█████▒▒██████   ▒▒█████ 
 ▒▒▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒  ▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒    ▒▒▒▒▒  ▒▒▒▒▒▒     ▒▒▒▒▒  
 ==================================================================
-         SIMPLE BASH NETWORK SCAN - DEVELOPED BY JIRT2007                             
+      SIMPLE BASH LOCAL NETWORK SCAN - DEVELOPED BY JIRT2007                            
 ==================================================================		  
 EOF
 echo " " | tee -a "$LOG"
@@ -74,8 +74,8 @@ echo "================== $(date) ==================" | tee -a "$LOG"
 				MAC="MAC NOT DETECTED"
 			fi
 
-		# "\n" ejecuta un salto de linea.
-		RESULTADO="\nIP LOCAL: ${SUBRED}.${i} | MAC: ${MAC} | TTL: ${TTL} \nOPEN PORTS:${PUERTOS}"
+		# "\e[1m . . . \e[0m" activa texto en negrita.
+		RESULTADO="\e[1mIP LOCAL:\e[0m ${SUBRED}.${i} | \e[1mMAC:\e[0m ${MAC} | \e[1mTTL:\e[0m ${TTL} \n\e[1mOPEN PORTS:\e[0m${PUERTOS} \n"
 		
 		# === ENVIAR SALIDA AL LOG ===
 			# "tee -a" envia la salida para que se acumule al final de $LOG 
